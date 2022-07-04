@@ -1,0 +1,31 @@
+{
+    "name": "covatech/covatech",
+    "authors": [
+        {
+            "name": "Minh Vuong",
+            "email": "vuongxuongminh@gmail.com"
+        }
+    ],
+    "description": "Monorepo for Covatech packages development",
+    "license": "MIT",
+    "require": {
+        "payum/payum": "^1.7",
+        "php": ">=8.0"
+    },
+    "require-dev": {
+        "php-http/guzzle6-adapter": "^2.0",
+        "symplify/monorepo-builder": "^11.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "CovaTech\\Payum\\MoMo\\": "packages/payum-momo/src",
+            "CovaTech\\Payum\\VNPay\\": "packages/payum-vnpay/src",
+            "CovaTech\\Payum\\ZaloPay\\": "packages/payum-zalopay/src"
+        }
+    },
+    "replace": {
+        "covatech/payum-momo": "self.version",
+        "covatech/payum-vnpay": "self.version",
+        "covatech/payum-zalopay": "self.version"
+    }
+}

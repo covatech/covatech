@@ -1,0 +1,23 @@
+{
+  "name": "covatech/payum-momo",
+  "authors": [
+    {
+      "name": "Minh Vuong",
+      "email": "vuongxuongminh@gmail.com"
+    }
+  ],
+  "description": "Package support to integrate Momo payment gateway to Payum ecosystem.",
+  "license": "MIT",
+  "require": {
+    "php": ">=8.0",
+    "payum/payum": "^1.7"
+  },
+  "require-dev": {
+    "php-http/guzzle6-adapter": "^2.0"
+  },
+  "autoload": {
+    "psr-4": {
+      "CovaTech\\Payum\\MoMo\\": "src"
+    }
+  }
+}
