@@ -38,12 +38,6 @@ final class CaptureQuickPayAction implements ActionInterface, GatewayAwareInterf
 
     public function supports($request): bool
     {
-        if (!$request instanceof CaptureQuickPay) {
-            return false;
-        }
-
-        $model = $request->getModel();
-
-        return $model instanceof \ArrayAccess;
+        return $request instanceof CaptureQuickPay && $request->getModel() instanceof \ArrayAccess;
     }
 }

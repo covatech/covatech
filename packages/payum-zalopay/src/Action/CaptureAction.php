@@ -37,12 +37,6 @@ final class CaptureAction implements ActionInterface, GatewayAwareInterface
 
     public function supports($request): bool
     {
-        if (!$request instanceof Capture) {
-            return false;
-        }
-
-        $model = $request->getModel();
-
-        return $model instanceof \ArrayAccess;
+        return $request instanceof Capture && $request->getModel() instanceof \ArrayAccess;
     }
 }

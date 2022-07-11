@@ -10,6 +10,7 @@ declare(strict_types=1);
 
 namespace CovaTech\Payum\ZaloPay\Action;
 
+use CovaTech\Payum\ZaloPay\ApiV2;
 use Payum\Core\Action\ActionInterface;
 use Payum\Core\Bridge\Spl\ArrayObject;
 use Payum\Core\Exception\RequestNotSupportedException;
@@ -25,9 +26,9 @@ final class StatusAction implements ActionInterface
         $model = ArrayObject::ensureArrayObject($request->getModel());
 
         match ($model['return_code']) {
-            1 => $request->markCaptured(),
-            2 => $request->markFailed(),
-            3 => $request->markPending(),
+            ApiV2::SUCCESS => $request->markCaptured(),
+            ApiV2::FAIL => $request->markFailed(),
+            ApiV2::PROCESSING => $request->markPending(),
             default => $request->markUnknown()
         };
     }

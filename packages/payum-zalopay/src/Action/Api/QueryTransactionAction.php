@@ -20,6 +20,7 @@ final class QueryTransactionAction extends AbstractAction
     {
         /** @var $request QueryTransaction */
         RequestNotSupportedException::assertSupports($this, $request);
+
         $model = ArrayObject::ensureArrayObject($request->getModel());
 
         if (false == $model['app_trans_id']) {
