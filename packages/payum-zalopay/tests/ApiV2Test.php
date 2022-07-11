@@ -498,7 +498,7 @@ class ApiV2Test extends TestCase
             new HttplugFactory()
         );
 
-        $this->expectException(\InvalidArgumentException::class);
+        $this->expectException(\Payum\Core\Exception\InvalidArgumentException::class);
         $this->expectExceptionMessage($exceptionMessage);
 
         $api->verifyHttpBody($content);

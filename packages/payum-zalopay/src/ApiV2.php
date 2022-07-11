@@ -13,6 +13,9 @@ namespace CovaTech\Payum\ZaloPay;
 use Http\Message\MessageFactory;
 use Payum\Core\Bridge\Spl\ArrayObject;
 use Payum\Core\Exception\Http\HttpException;
+use Payum\Core\Exception\InvalidArgumentException;
+use Payum\Core\Exception\LogicException;
+use Payum\Core\Exception\RuntimeException;
 use Psr\Http\Client\ClientInterface;
 use Psr\Http\Message\RequestInterface;
 
@@ -115,13 +118,13 @@ final class ApiV2
         $fields = json_decode($body, true);
 
         if (null === $fields) {
-            throw new \InvalidArgumentException('Http body must be a json string.');
+            throw new InvalidArgumentException('Http body must be a json string.');
         }
 
         $fields = ArrayObject::ensureArrayObject($fields);
 
         if (false == $fields['mac'] || false == $fields['data']) {
-            throw new \InvalidArgumentException('`mac` and `data` fields should be exist in http body.');
+            throw new InvalidArgumentException('`mac` and `data` fields should be exist in http body.');
         }
 
         return hash_hmac('sha256', $fields['data'], $this->options['key2']) === $fields['mac'];
@@ -153,7 +156,7 @@ final class ApiV2
     {
         $response = $this->httpClient->sendRequest($request);
 
-        if (false == ($response->getStatusCode() >= 200 && $response->getStatusCode() < 300)) {
+        if (false === ($response->getStatusCode() >= 200 && $response->getStatusCode() < 300)) {
             throw HttpException::factory($request, $response);
         }
 
@@ -180,7 +183,7 @@ final class ApiV2
     private function publicEncrypt(string $data): string
     {
         if (!isset($this->options['public_key'])) {
-            throw new \LogicException('`public_key` must be set to encrypt data.');
+            throw new LogicException('`public_key` must be set to encrypt data.');
         }
 
         try {
@@ -190,7 +193,7 @@ final class ApiV2
         }
 
         if (false === $isSuccessful) {
-            throw new \RuntimeException('Fail to encrypt data with `public_key` given.');
+            throw new RuntimeException('Fail to encrypt data with `public_key` given.');
         }
 
         return base64_encode($encryptedData);
