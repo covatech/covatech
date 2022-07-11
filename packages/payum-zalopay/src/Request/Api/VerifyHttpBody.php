@@ -1,0 +1,26 @@
+<?php
+/*
+ * (c) Minh Vuong <vuongxuongminh@gmail.com>
+ *
+ * This source file is subject to the MIT license that is bundled
+ * with this source code in the file LICENSE.
+ */
+
+declare(strict_types=1);
+
+namespace CovaTech\Payum\ZaloPay\Request\Api;
+
+use Payum\Core\Request\Generic;
+
+final class VerifyHttpBody extends Generic
+{
+    public function __construct(private string $body, $model)
+    {
+        parent::__construct($model);
+    }
+
+    public function getBody(): string
+    {
+        return $this->body;
+    }
+}

@@ -33,7 +33,7 @@ final class ApiV2
         private MessageFactory $messageFactory
     ) {
         $options = ArrayObject::ensureArrayObject($this->options);
-        $options->validateNotEmpty(['app_id', 'key1', 'key2']);
+        $options->validateNotEmpty(['app_id', 'key1', 'key2', 'sandbox']);
     }
 
     public function createOrder(array $fields): array
@@ -110,6 +110,23 @@ final class ApiV2
         return $this->doRequest($request);
     }
 
+    public function verifyHttpBody(string $body): bool
+    {
+        $fields = json_decode($body, true);
+
+        if (null === $fields) {
+            throw new \InvalidArgumentException('Http body must be a json string.');
+        }
+
+        $fields = ArrayObject::ensureArrayObject($fields);
+
+        if (false == $fields['mac'] || false == $fields['data']) {
+            throw new \InvalidArgumentException('`mac` and `data` fields should be exist in http body.');
+        }
+
+        return hash_hmac('sha256', $fields['data'], $this->options['key2']) === $fields['mac'];
+    }
+
     private function createHttpMessage(string $path, array $fields): RequestInterface
     {
         $uri = $this->getUri($path);
@@ -166,10 +183,14 @@ final class ApiV2
             throw new \LogicException('`public_key` must be set to encrypt data.');
         }
 
-        $isSuccessful = openssl_public_encrypt($data, $encryptedData, $this->options['public_key']);
+        try {
+            $isSuccessful = openssl_public_encrypt($data, $encryptedData, $this->options['public_key']);
+        } catch (\Exception) {
+            $isSuccessful = false;
+        }
 
         if (false === $isSuccessful) {
-            throw new \RuntimeException('Fail to encrypt data with public key received.');
+            throw new \RuntimeException('Fail to encrypt data with `public_key` given.');
         }
 
         return base64_encode($encryptedData);
