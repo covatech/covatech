@@ -9,11 +9,14 @@
     "description": "Monorepo for Covatech packages development",
     "license": "MIT",
     "require": {
+        "ext-openssl": "*",
         "payum/payum": "^1.7",
         "php": ">=8.0"
     },
     "require-dev": {
+        "nyholm/psr7": "^1.5",
         "php-http/guzzle6-adapter": "^2.0",
+        "phpunit/phpunit": "^9.5",
         "symplify/monorepo-builder": "^11.0"
     },
     "autoload": {
@@ -21,6 +24,11 @@
             "CovaTech\\Payum\\MoMo\\": "packages/payum-momo/src",
             "CovaTech\\Payum\\VNPay\\": "packages/payum-vnpay/src",
             "CovaTech\\Payum\\ZaloPay\\": "packages/payum-zalopay/src"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "CovaTech\\Payum\\ZaloPay\\Tests\\": "packages/payum-zalopay/tests"
         }
     },
     "replace": {

@@ -14,11 +14,17 @@
     "payum/payum": "^1.7"
   },
   "require-dev": {
-    "php-http/guzzle6-adapter": "^2.0"
+    "nyholm/psr7": "^1.5",
+    "phpunit/phpunit": "^9.5"
   },
   "autoload": {
     "psr-4": {
       "CovaTech\\Payum\\ZaloPay\\": "src"
+    }
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "CovaTech\\Payum\\ZaloPay\\Tests\\": "tests"
     }
   }
 }
