@@ -16,9 +16,11 @@ use CovaTech\Payum\ZaloPay\Action\Api\DoQuickPayAction;
 use CovaTech\Payum\ZaloPay\Action\Api\DoRefundAction;
 use CovaTech\Payum\ZaloPay\Action\Api\QueryRefundAction;
 use CovaTech\Payum\ZaloPay\Action\Api\QueryTransactionAction;
+use CovaTech\Payum\ZaloPay\Action\Api\VerifyHttpBodyAction;
 use CovaTech\Payum\ZaloPay\Action\CaptureAction;
 use CovaTech\Payum\ZaloPay\Action\CaptureQuickPayAction;
 use CovaTech\Payum\ZaloPay\Action\GetListMerchantBanksAction;
+use CovaTech\Payum\ZaloPay\Action\NotifyAction;
 use CovaTech\Payum\ZaloPay\Action\RefundAction;
 use CovaTech\Payum\ZaloPay\Action\RefundStatusAction;
 use CovaTech\Payum\ZaloPay\Action\StatusAction;
@@ -48,12 +50,14 @@ final class GatewayFactory extends BaseGatewayFactory
                 'payum.action.status' => new StatusAction(),
                 'payum.action.refund_status' => new RefundStatusAction(),
                 'payum.action.get_list_merchant_banks' => new GetListMerchantBanksAction(),
-                'payum.action.api.do_get_list_merchant_banks' => new DoGetListBankMerchantsAction()
+                'payum.action.api.do_get_list_merchant_banks' => new DoGetListBankMerchantsAction(),
+                'payum.action.notify' => new NotifyAction(),
+                'payum.action.api.verify_http_content' => new VerifyHttpBodyAction(),
             ]
         );
 
         if (false == $config['payum.api']) {
-            $config['payum.required_options'] = ['app_id', 'key1', 'key2'];
+            $config['payum.required_options'] = ['app_id', 'key1', 'key2', 'sandbox'];
             $config['payum.default_options'] = [
                 'app_id' => '',
                 'key1' => '',
