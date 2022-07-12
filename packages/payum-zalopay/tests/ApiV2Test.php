@@ -338,14 +338,13 @@ class ApiV2Test extends TestCase
         return array_map(function (array $case) {
             $asserter = $case[2];
             $case[2] = function (RequestInterface $request) use ($asserter): ResponseInterface {
-                $body = $request->getBody();
+                $this->assertSame('POST', $request->getMethod());
+                $this->assertSame('application/x-www-form-urlencoded', $request->getHeader('content-type')[0]);
 
+                $body = $request->getBody();
                 $body->rewind();
 
                 parse_str($body->getContents(), $fields);
-
-                $this->assertSame('POST', $request->getMethod());
-                $this->assertSame('application/x-www-form-urlencoded', $request->getHeader('content-type')[0]);
 
                 $asserter($fields);
 
@@ -544,6 +543,7 @@ class ApiV2Test extends TestCase
 
         $ref = new \ReflectionMethod($api, 'doRequest');
         $ref->setAccessible(true);
+
         $result = $ref->getClosure($api)->call($api, $this->createMock(RequestInterface::class));
 
         $this->assertArrayHasKey('return_code', $result);
