@@ -12,6 +12,7 @@ namespace CovaTech\Payum\ZaloPay\Action\Api;
 
 use CovaTech\Payum\ZaloPay\Request\Api\QueryTransaction;
 use Payum\Core\Bridge\Spl\ArrayObject;
+use Payum\Core\Exception\LogicException;
 use Payum\Core\Exception\RequestNotSupportedException;
 
 final class QueryTransactionAction extends AbstractAction
@@ -24,7 +25,7 @@ final class QueryTransactionAction extends AbstractAction
         $model = ArrayObject::ensureArrayObject($request->getModel());
 
         if (false == $model['app_trans_id']) {
-            throw new \LogicException('Can not query transaction without `app_trans_id`.');
+            throw new LogicException('Can not query transaction without `app_trans_id`.');
         }
 
         $details = $this->api->queryTransaction($model->toUnsafeArray());

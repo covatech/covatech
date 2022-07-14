@@ -36,7 +36,11 @@ final class ApiV2
         private MessageFactory $messageFactory
     ) {
         $options = ArrayObject::ensureArrayObject($this->options);
-        $options->validateNotEmpty(['app_id', 'key1', 'key2', 'sandbox']);
+        $options->validateNotEmpty(['app_id', 'key1', 'key2']);
+
+        if (false === is_bool($options['sandbox'])) {
+            throw new LogicException('The boolean sandbox option must be set.');
+        }
     }
 
     public function createOrder(array $fields): array

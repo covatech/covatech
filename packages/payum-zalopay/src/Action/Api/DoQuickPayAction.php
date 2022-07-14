@@ -23,7 +23,7 @@ final class DoQuickPayAction extends AbstractAction
 
         $model = ArrayObject::ensureArrayObject($request->getModel());
 
-        $model->validateNotEmpty(['app_user', 'amount', 'app_trans_id', 'embed_data', 'item', 'payment_code']);
+        $model->validateNotEmpty(['app_user', 'amount', 'app_trans_id', 'embed_data', 'item', 'description', 'payment_code']);
 
         $details = $this->api->quickPay($model->toUnsafeArray());
 
