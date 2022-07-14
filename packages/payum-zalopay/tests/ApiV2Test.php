@@ -19,12 +19,33 @@ use Psr\Http\Message\ResponseInterface;
 
 class ApiV2Test extends TestCase
 {
-    public function testConstructorMissingRequireOptions()
+    /**
+     * @dataProvider constructorMissingRequireOptionsProvider
+     */
+    public function testConstructorMissingRequireOptions(array $options, string $exceptionMessage)
     {
         $this->expectException(\Payum\Core\Exception\LogicException::class);
-        $this->expectExceptionMessage('The app_id, key1, key2, sandbox fields are required.');
+        $this->expectExceptionMessage($exceptionMessage);
 
-        new ApiV2([], $this->createMock(ClientInterface::class), new HttplugFactory());
+        new ApiV2($options, $this->createMock(ClientInterface::class), new HttplugFactory());
+    }
+
+    public function constructorMissingRequireOptionsProvider(): array
+    {
+        return [
+            'missing sandbox option' => [
+                'options' => [
+                    'app_id' => '1',
+                    'key1' => '2',
+                    'key2' => '3'
+                ],
+                'exceptionMessage' => 'The boolean sandbox option must be set.'
+            ],
+            'missing text options' => [
+                'options' => [],
+                'exceptionMessage' => 'The app_id, key1, key2 fields are required.'
+            ]
+        ];
     }
 
     /**
@@ -573,5 +594,53 @@ class ApiV2Test extends TestCase
         $ref = new \ReflectionMethod($api, 'doRequest');
         $ref->setAccessible(true);
         $ref->getClosure($api)->call($api, $this->createMock(RequestInterface::class));
+    }
+
+    /**
+     * @dataProvider uriPathProvider
+     */
+    public function testGetUri(string $path, bool $sandbox, string $uriExpected)
+    {
+        $api = new ApiV2(
+            [
+                'app_id' => 'id',
+                'key1' => 'key1',
+                'key2' => 'key2',
+                'sandbox' => $sandbox,
+            ],
+            $this->createMock(ClientInterface::class),
+            new HttplugFactory()
+        );
+
+        $ref = new \ReflectionMethod($api, 'getUri');
+        $ref->setAccessible(true);
+
+        $this->assertEquals($uriExpected, $ref->getClosure($api)->call($api, $path));
+    }
+
+    public function uriPathProvider()
+    {
+        return [
+            'sandbox get list merchant banks' => [
+                'path' => '/getlistmerchantbanks',
+                'sandbox' => true,
+                'uriExpected' => 'https://sbgateway.zalopay.vn/api/getlistmerchantbanks'
+            ],
+            'production get list merchant banks' => [
+                'path' => '/getlistmerchantbanks',
+                'sandbox' => false,
+                'uriExpected' => 'https://gateway.zalopay.vn/api/getlistmerchantbanks'
+            ],
+            'sandbox api' => [
+                'path' => '/api',
+                'sandbox' => true,
+                'uriExpected' => 'https://sb-openapi.zalopay.vn/v2/api'
+            ],
+            'production api' => [
+                'path' => '/api',
+                'sandbox' => false,
+                'uriExpected' => 'https://openapi.zalopay.vn/v2/api'
+            ]
+        ];
     }
 }
