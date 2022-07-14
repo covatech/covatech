@@ -12,6 +12,7 @@ namespace CovaTech\Payum\ZaloPay\Action\Api;
 
 use CovaTech\Payum\ZaloPay\Request\Api\VerifyHttpBody;
 use Payum\Core\Bridge\Spl\ArrayObject;
+use Payum\Core\Exception\InvalidArgumentException;
 use Payum\Core\Exception\RequestNotSupportedException;
 use Payum\Core\Reply\HttpResponse;
 
@@ -28,7 +29,7 @@ final class VerifyHttpBodyAction extends AbstractAction
             if (false === $this->api->verifyHttpBody($request->getBody())) {
                 throw new HttpResponse('`mac` field is invalid.', 400);
             }
-        } catch (\InvalidArgumentException $e) {
+        } catch (InvalidArgumentException $e) {
             throw new HttpResponse($e->getMessage(), 400);
         }
 
