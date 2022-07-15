@@ -1,5 +1,6 @@
 {
   "name": "covatech/payum-vnpay",
+  "type": "library",
   "authors": [
     {
       "name": "Minh Vuong",

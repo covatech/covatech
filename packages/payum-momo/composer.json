@@ -1,5 +1,6 @@
 {
   "name": "covatech/payum-momo",
+  "type": "library",
   "authors": [
     {
       "name": "Minh Vuong",

@@ -1,5 +1,6 @@
 {
   "name": "covatech/payum-zalopay",
+  "type": "library",
   "authors": [
     {
       "name": "Minh Vuong",
