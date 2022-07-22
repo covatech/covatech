@@ -49,15 +49,30 @@ class VerifyHttpBodyActionTest extends AbstractActionTest
         return [
             'invalid json' => [
                 'body' => '',
-                'responseBody' => 'Http body must be a json string.'
+                'responseBody' => json_encode(
+                    [
+                        'return_message' => 'Http body must be a json string.',
+                        'return_code' => 0
+                    ]
+                )
             ],
             'missing data or mac fields' => [
                 'body' => json_encode([]),
-                'responseBody' => '`mac` and `data` fields should be exist in http body.'
+                'responseBody' => json_encode(
+                    [
+                        'return_message' => '`mac` and `data` fields should be exist in http body.',
+                        'return_code' => 0
+                    ]
+                )
             ],
             'invalid mac' => [
                 'body' => json_encode(['mac' => '1', 'data' => '2']),
-                'responseBody' => '`mac` field is invalid.'
+                'responseBody' => json_encode(
+                    [
+                        'return_message' => '`mac` field is invalid.',
+                        'return_code' => 0
+                    ]
+                )
             ]
         ];
     }
@@ -91,7 +106,12 @@ class VerifyHttpBodyActionTest extends AbstractActionTest
             throw new \LogicException();
         } catch (HttpResponse $response) {
             $this->assertEquals(200, $response->getStatusCode());
-            $this->assertEquals('OK', $response->getContent());
+            $this->assertJson($json = $response->getContent());
+
+            $data = json_decode($json, true);
+
+            $this->assertEquals('OK', $data['return_message']);
+            $this->assertEquals(1, $data['return_code']);
         }
     }
 }
