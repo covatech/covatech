@@ -27,21 +27,37 @@ final class VerifyHttpBodyAction extends AbstractAction
 
         try {
             if (false === $this->api->verifyHttpBody($request->getBody())) {
-                throw new HttpResponse('`mac` field is invalid.', 400);
+                throw $this->makeReplyResponse(400, '`mac` field is invalid.');
             }
         } catch (InvalidArgumentException $e) {
-            throw new HttpResponse($e->getMessage(), 400);
+            throw $this->makeReplyResponse(400, $e->getMessage());
         }
 
         $data = json_decode($request->getBody(), true);
 
         $model->replace($data);
 
-        throw new HttpResponse('OK', 200);
+        throw $this->makeReplyResponse(200, 'OK');
     }
 
     public function supports($request): bool
     {
         return $request instanceof VerifyHttpBody && $request->getModel() instanceof \ArrayAccess;
+    }
+
+    private function makeReplyResponse(int $httpStatus, string $message): HttpResponse
+    {
+        return new HttpResponse(
+            json_encode(
+                [
+                    'return_message' => $message,
+                    'return_code' => (int)(200 === $httpStatus),
+                ]
+            ),
+            $httpStatus,
+            [
+                'content-type' => 'application/json'
+            ]
+        );
     }
 }
